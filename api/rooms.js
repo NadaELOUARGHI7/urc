@@ -32,15 +32,9 @@ export default async function handler(request) {
             return unauthorizedResponse();
         }
 
-
-        const bearerToken = token.replace("Bearer ", "").trim();
-        const user = await redis.get(bearerToken);
-        const currentUser=user.username;
-
-
         // Query the database for users
-        const { rowCount, rows } = await sql`select user_id, username, TO_CHAR(last_login, 'DD/MM/YYYY HH24:MI') as last_login from users WHERE username != ${currentUser}  order by last_login desc`;
-        console.log("Got " + rowCount + " users");
+        const { rowCount, rows } = await sql`select room_id, name, TO_CHAR(created_on, 'DD/MM/YYYY HH24:MI') as created_on from rooms order by created_on desc`;
+        console.log("Got " + rowCount + " room");
 
         if (rowCount === 0) {
             // Vercel bug doesn't allow 204 response status

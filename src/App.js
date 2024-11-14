@@ -5,6 +5,8 @@ import store from './redux/store';
 
 import {Login} from "./user/Login";
 import {Register} from "./user/Register";  
+import Dashboard from './pages/dashboard';
+
 
 function App() {
 
@@ -16,6 +18,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/connexion" element={<Login />} />
         <Route path="/inscription" element={<Register />} />
+        <Route path="/dashboard" element={<Dashboard />} />
 
     </Routes>
     </Router>

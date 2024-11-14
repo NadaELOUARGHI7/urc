@@ -20,7 +20,6 @@ export function Register() {
       const password = data.get("password") as string;
       const email = data.get("email") as string;
   
-      // Vérification de la longueur de l'identifiant et du mot de passe
       if (username.length < 4) {
         setError("L'identifiant doit contenir au moins 4 caractères.");
         return;
@@ -48,77 +47,61 @@ export function Register() {
 
 
     return (
-        <div className="flex flex-col items-center">
-
-              <Navbar/>
-
-            <form onSubmit={handleSubmit} className="w-full max-w-sm mt-4">
-                {/* Form fields */}
-                <div className="md:flex md:items-center mb-6">
-                    <div className="md:w-1/3">
-                        <label htmlFor="username" className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">
-                            Username
-                        </label>
-                    </div>
-                    <div className="md:w-2/3">
-                        <input
-                            name="username"
-                            placeholder="Username"
-                            className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                            type="text"
-                            required
-                        />
-                    </div>
-                </div>
-                
-                <div className="md:flex md:items-center mb-6">
-                    <div className="md:w-1/3">
-                        <label htmlFor="email" className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">
-                            Email
-                        </label>
-                    </div>
-                    <div className="md:w-2/3">
-                        <input
-                            name="email"
-                            placeholder="Email"
-                            className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                            type="email"
-                            required
-                        />
-                    </div>
-                </div>
-                <div className="md:flex md:items-center mb-6">
-                    <div className="md:w-1/3">
-                        <label htmlFor="password" className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">
-                            Password
-                        </label>
-                    </div>
-                    <div className="md:w-2/3">
-                        <input
-                            name="password"
-                            placeholder="Password"
-                            className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                            type="password"
-                            required
-                        />
-                    </div>
-                </div>
-                
-                <div className="md:flex md:items-center">
-                    <div className="md:w-1/3"></div>
-                    <div className="md:w-2/3">
-                        <button
-                            type="submit"
-                            className="shadow bg-indigo-500 hover:bg-indigo-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
-                        >Inscrire
-                        </button>
-                    </div>
-                </div>
-                
-                
-            </form>
-
-            {error && <div className="mt-2 text-red-500">{error}</div>}
+        <div className="h-screen flex flex-col bg-gray-100">
+    <Navbar />
+    <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto mt-8 px-4 py-6 bg-white rounded-lg shadow-lg">
+        {/* Form fields */}
+        <div className="mb-6">
+            <label htmlFor="username" className="block text-gray-700 font-semibold mb-2">
+                Username
+            </label>
+            <input
+                name="username"
+                placeholder="Username"
+                className="w-full bg-gray-200 border-2 border-gray-300 rounded-lg py-2 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                type="text"
+                required
+            />
         </div>
+        
+        <div className="mb-6">
+            <label htmlFor="email" className="block text-gray-700 font-semibold mb-2">
+                Email
+            </label>
+            <input
+                name="email"
+                placeholder="Email"
+                className="w-full bg-gray-200 border-2 border-gray-300 rounded-lg py-2 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                type="email"
+                required
+            />
+        </div>
+
+        <div className="mb-6">
+            <label htmlFor="password" className="block text-gray-700 font-semibold mb-2">
+                Password
+            </label>
+            <input
+                name="password"
+                placeholder="Password"
+                className="w-full bg-gray-200 border-2 border-gray-300 rounded-lg py-2 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                type="password"
+                required
+            />
+        </div>
+
+        <div className="mb-6">
+            <button
+                type="submit"
+                className="w-full bg-indigo-500 hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-white font-bold py-2 px-4 rounded-lg"
+            >
+                Inscrire
+            </button>
+        </div>
+    </form>
+
+    {error && <div className="mt-2 text-red-500 text-center">{error}</div>}
+</div>
+
     );
 }
