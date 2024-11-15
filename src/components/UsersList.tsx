@@ -1,4 +1,7 @@
+//UsersList.tsx
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; 
+
 
 interface User {
     user_id: number;
@@ -6,17 +9,22 @@ interface User {
     last_login: string;
 }
 
-const UsersList: React.FC = () => {
+interface UsersListProps {
+    selectedUserId: number | null;
+    setSelectedUserId: (userId: number) => void;
+}
+
+const UsersList: React.FC<UsersListProps> = ({ selectedUserId, setSelectedUserId }) => {
     const [users, setUsers] = useState<User[]>([]);
     const [error, setError] = useState<string | null>(null);
-    const [loading, setLoading] = useState<boolean>(true); // Add loading state
+    const navigate = useNavigate(); 
 
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const token = localStorage.getItem("authToken");
+                const token = localStorage.getItem("token");
 
-                console.log("Token being sent:", token);  // Log token to verify it's present
+                console.log("users list Token being sent:", token);  // Log token to verify it's present
 
                 if (!token) throw new Error("No authentication token found");
 
@@ -29,7 +37,7 @@ const UsersList: React.FC = () => {
                 });
 
                 if (response.status === 401) {
-                    localStorage.removeItem("authToken");
+                    localStorage.removeItem("token");
                     setError("Session expired. Please log in again.");
                     window.location.href = "/connexion"; 
                     return;
@@ -48,6 +56,15 @@ const UsersList: React.FC = () => {
         fetchUsers();
     }, []);
 
+    // Handle click on a user to select and fetch messages
+    const handleUserClick = (userId: number) => {
+        setSelectedUserId(userId);
+        console.log("userId"+userId);
+        console.log("selectedUserId"+selectedUserId);
+        //navigate(`/chat/${userId}`);
+    };
+
+
     return (
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto mt-10">
           <h2 className="text-xl font-semibold text-center text-blue-700 mb-4">Utilisateurs</h2>
@@ -62,7 +79,9 @@ const UsersList: React.FC = () => {
                     </thead>
                     <tbody>
                         {users.map((user) => (
-                          <tr key={user.user_id} className="hover:bg-blue-50">
+                          <tr key={user.user_id} className="hover:bg-blue-50"  onClick={() => handleUserClick(user.user_id)} >
+
+
                                   <td className="py-2 px-4 border-b">{user.username}</td>
                               <td className="py-2 px-4 border-b">{user.last_login}</td>
                           </tr>
@@ -75,3 +94,4 @@ const UsersList: React.FC = () => {
 };
 
 export default UsersList;
+

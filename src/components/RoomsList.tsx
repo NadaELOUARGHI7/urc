@@ -14,7 +14,7 @@ const RoomsList: React.FC = () => {
     useEffect(() => {
         const fetchRooms = async () => {
             try {
-                const token = localStorage.getItem("authToken");
+                const token = localStorage.getItem("token");
 
                 console.log("Token being sent:", token);  // Log token to verify it's present
 

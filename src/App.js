@@ -20,6 +20,8 @@ function App() {
         <Route path="/inscription" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
 
+
+
     </Routes>
     </Router>
     </Provider>

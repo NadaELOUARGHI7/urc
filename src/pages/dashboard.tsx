@@ -1,35 +1,28 @@
-import React, { useState , useEffect } from "react";
+import React, { useState } from "react";
 import UsersList from "../components/UsersList";
 import RoomsList from "../components/RoomsList";
+import ChatList from "../components/ChatList";
+
 import { useNavigate } from "react-router-dom"; 
 
 const Dashboard: React.FC = () => {
 
     const [session, setSession] = useState<{ token?: string; username?: string } | null>(null);
+    const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+    const [loggedInUserId, setLoggedInUserId] = useState<number>(1); // Replace with actual logged-in user ID
 
+ 
     const navigate = useNavigate(); 
 
-
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-
-        if (!token ) {
-            // If no token or username in localStorage, redirect to login
-            navigate('/connexion');
-        } else {
-            // If token and username exist, set session
-            setSession({ token});
-        }
-    }, [navigate]);
-
-
-
+    
     const handleLogout = async () => {
         try {
             localStorage.removeItem('token');
+            localStorage.removeItem('username');
             setSession(null);
 
             console.log(sessionStorage.getItem('token'));
+            console.log(sessionStorage.getItem('username'));
 
 
             navigate('/connexion');
@@ -51,7 +44,10 @@ const Dashboard: React.FC = () => {
             <div className="flex flex-1 overflow-hidden">
                 {/* Sidebar with Users and Rooms */}
                 <aside className="bg-white w-full md:w-1/4 p-4 shadow-lg overflow-auto">
-                    <UsersList />
+                <UsersList 
+                        selectedUserId={selectedUserId} 
+                        setSelectedUserId={setSelectedUserId} 
+                    />                    
                     <RoomsList />
                 </aside>
 
@@ -60,7 +56,8 @@ const Dashboard: React.FC = () => {
                     <div className="w-full max-w-2xl flex-1 overflow-y-auto bg-white p-4 rounded-lg shadow-md">
                         {/* Placeholder for Chat messages */}
                         <p className="text-center text-gray-400">Chat messages will appear here.</p>
-                    </div>
+                        <ChatList selectedUserId={selectedUserId} loggedInUserId={loggedInUserId} />
+                        </div>
 
                     {/* Message Input */}
                     <div className="w-full max-w-2xl mt-4 flex items-center">

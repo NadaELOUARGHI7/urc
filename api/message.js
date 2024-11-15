@@ -13,8 +13,17 @@ export default async (request, response) => {
 
         const message = await request.body;
 
-        // TODO : save message
-
+        const insertMessage = async (senderId, receiverId, content) => {
+            const query = `
+                INSERT INTO messages (sender_id, receiver_id, content)
+                VALUES ($1, $2, $3)
+                RETURNING *;
+            `;
+            const values = [senderId, receiverId, content];
+            const result = await pool.query(query, values);
+            return result.rows[0];
+        };
+        
         response.send("OK");
     } catch (error) {
         console.log(error);
