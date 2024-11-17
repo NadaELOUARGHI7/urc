@@ -28,7 +28,7 @@ export function Login() {
                 setError(null);
                 form.reset();
                 setLoading(false);
-
+                console.log ("user_id: from sessionstorage  "+sessionStorage.getItem('user_id'));
                 localStorage.setItem("token", result.token); // Make sure the key matches what you're using in Dashboard
                 navigate('/dashboard');
             },

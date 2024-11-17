@@ -1,32 +1,57 @@
-import {getConnecterUser, triggerNotConnected} from "../lib/session";
 // import { Redis } from '@upstash/redis';
 // const PushNotifications = require("@pusher/push-notifications-server");
+import { db } from "@vercel/postgres";
+import { getConnecterUser, triggerNotConnected } from "../lib/session";
+
+export const config = {
+    runtime: "edge", // Ensure this is the correct runtime for your environment
+};
 
 export default async (request, response) => {
+    let client;
+
     try {
-        const headers = new Headers(request.headers);
+        // Extract headers and authenticate user
         const user = await getConnecterUser(request);
-        if (user === undefined || user === null) {
-            console.log("Not connected");
-            triggerNotConnected(response);
+        if (!user) {
+            console.log("User not connected");
+            return triggerNotConnected(response);
         }
 
-        const message = await request.body;
+        // Parse the request body
+        const { sender_id, receiver_id, content } = await request.json();
+        if (!sender_id || !receiver_id || !content.trim()) {
+            return response.status(400).json({ error: "Invalid input. All fields are required." });
+        }
 
-        const insertMessage = async (senderId, receiverId, content) => {
-            const query = `
-                INSERT INTO messages (sender_id, receiver_id, content)
-                VALUES ($1, $2, $3)
-                RETURNING *;
-            `;
-            const values = [senderId, receiverId, content];
-            const result = await pool.query(query, values);
-            return result.rows[0];
-        };
-        
-        response.send("OK");
-    } catch (error) {
-        console.log(error);
-        response.status(500).json(error);
+        // Connect to the database
+        client = await db.connect();
+        if (!client) {
+            console.error("Failed to connect to the database");
+            return response.status(500).json({ error: "Failed to connect to the database" });
+        }
+
+        // Insert the message into the database
+        const query = `
+            INSERT INTO messages (sender_id, receiver_id, content)
+            VALUES ($1, $2, $3)
+            RETURNING *;
+        `;
+        const values = [sender_id, receiver_id, content];
+        const result = await client.query(query, values);
+        const newMessage = result.rows[0];
+
+        // Respond with the inserted message
+        return new Response(JSON.stringify(newMessage), {
+            status: 201,
+            headers: { "Content-Type": "application/json" },
+        });
+            } catch (error) {
+        console.error("Error inserting message:", error);
+        return response.status(500).json({ error: "Internal server error." });
+    } finally {
+        if (client) {
+            client.release();
+        }
     }
 };

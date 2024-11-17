@@ -20,12 +20,10 @@ const ChatList: React.FC<ChatProps> = ({ selectedUserId, loggedInUserId }) => {
     const [loading, setLoading] = useState<boolean>(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
-    // Scroll to the latest message
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
 
-    // Fetch messages when the selected user changes
     useEffect(() => {
         console.log("chatlist.tsx selectedUserId", selectedUserId);
         if (!selectedUserId) return;
@@ -37,7 +35,6 @@ const ChatList: React.FC<ChatProps> = ({ selectedUserId, loggedInUserId }) => {
                 const token = localStorage.getItem("token");
                 if (!token) throw new Error("No authentication token found");
 
-                // Make sure the endpoint includes the selectedUserId as a query parameter
                 const response = await fetch(`/api/chat?selectedUserId=${selectedUserId}`, {
                     method: "GET",
                     headers: {
@@ -53,7 +50,7 @@ const ChatList: React.FC<ChatProps> = ({ selectedUserId, loggedInUserId }) => {
                     setError(fetchedMessages.message);
                 } else {
                     setMessages(fetchedMessages);  
-                    scrollToBottom();
+                     scrollToBottom();
 
                 }                
 
@@ -70,41 +67,6 @@ const ChatList: React.FC<ChatProps> = ({ selectedUserId, loggedInUserId }) => {
     }, [selectedUserId, loggedInUserId]);
 
     
-    // Handle sending a new message
-    const handleSendMessage = async () => {
-        if (!newMessage.trim() || !selectedUserId) return;
-
-        try {
-            const token = localStorage.getItem("token");
-            if (!token) throw new Error("No authentication token found");
-
-            const response = await fetch(`/api/message`, {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    sender_id: loggedInUserId,
-                    receiver_id: selectedUserId,
-                    content: newMessage,
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error(`Failed to send message: ${response.statusText}`);
-            }
-
-            const newMsg = await response.json();
-            setMessages((prevMessages) => [...prevMessages, newMsg]); // Add new message to the chat
-            setNewMessage(""); // Clear the input
-            scrollToBottom(); // Scroll to the latest message
-        } catch (error: any) {
-            console.error("Error sending message:", error);
-            setError(error.message || "Error sending message");
-        }
-    };
-
     return (
         <div className="chat-container bg-white p-4 rounded-lg shadow-md flex flex-col h-full">
             {selectedUserId ? (
