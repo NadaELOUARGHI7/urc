@@ -17,7 +17,7 @@ export function loginUser(user: User, onResult: SessionCallback, onError: ErrorC
                 sessionStorage.setItem('externalId', session.externalId);
                 sessionStorage.setItem('username', session.username || "");
                 sessionStorage.setItem('user_id', String(session.id || "")); 
-                console.log("Stored user_id in session:", session.id);
+                console.log("Stored user_id in session:", sessionStorage.getItem("user_id"));
                                 
                 onResult(session)
             } else {

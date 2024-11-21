@@ -4,19 +4,21 @@ import { Session } from "../model/common";
 import { CustomError } from "../model/CustomError";
 import { useNavigate } from "react-router-dom"; 
 import  {Navbar}  from "./navbar";
+import useBeamsClient from '../redux/useBeamsClient'; 
 
 export function Login() {
     const [error, setError] = useState<CustomError | null>(null);
     const [session, setSession] = useState<Session | null>(null);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate(); 
+    const [userId, setUserId] = useState<number | null>(null); 
+    useBeamsClient(userId || 0); 
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const form = event.currentTarget;
         const data = new FormData(form);
         setLoading(true);
-
         loginUser(
             {
                 user_id: -1,
@@ -28,7 +30,12 @@ export function Login() {
                 setError(null);
                 form.reset();
                 setLoading(false);
-                console.log ("user_id: from sessionstorage  "+sessionStorage.getItem('user_id'));
+
+                const userIdFromStorage = parseInt(sessionStorage.getItem("user_id") || "0");
+                console.log("from login comp " + userIdFromStorage);
+
+                
+                setUserId(userIdFromStorage); // Update state to trigger useBeamsClient
                 localStorage.setItem("token", result.token); // Make sure the key matches what you're using in Dashboard
                 navigate('/dashboard');
             },
@@ -38,8 +45,9 @@ export function Login() {
                 setLoading(false);
             }
         );
-    };
 
+    };
+   
 
     return (
         <div className="h-screen flex flex-col bg-gray-100">

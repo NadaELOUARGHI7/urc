@@ -1,6 +1,43 @@
-// proper initialization
+// service-worker.js
+self.addEventListener("push", function (event) {
+  const data = event.data.json();
+
+  self.registration.showNotification(data.notification.title, {
+      body: data.notification.body,
+      icon: "/path-to-icon.png", // Optional notification icon
+      data: { url: data.notification.deep_link }, // Add the deep link to the notification
+  });
+});
+
+self.addEventListener("notificationclick", function (event) {
+  event.notification.close();
+  event.waitUntil(clients.openWindow(event.notification.data.url));
+});
+
+
+self.addEventListener("notificationclick", function (event) {
+    event.notification.close();
+    event.waitUntil(clients.openWindow(event.notification.data.url));
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*proper initialization
 if( 'function' === typeof importScripts) {
-  /* eslint-disable no-undef */
+  /* eslint-disable no-undef 
   importScripts("https://js.pusher.com/beams/service-worker.js");
 }
 
@@ -23,3 +60,4 @@ PusherPushNotifications.onNotificationReceived = ({
   // E.g. payload.notification.title = "A client-determined title!"
   pushEvent.waitUntil(handleNotification(payload));
 };
+*/

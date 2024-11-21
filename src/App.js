@@ -9,7 +9,7 @@ import Dashboard from './pages/dashboard';
 
 
 function App() {
-
+  
   return (
 
     <Provider store={store}> {/* Wrap the app with Provider and pass the store */}

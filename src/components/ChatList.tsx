@@ -29,6 +29,7 @@ const ChatList: React.FC<ChatProps> = ({ selectedUserId, loggedInUserId }) => {
         if (!selectedUserId) return;
 
         const fetchMessages = async () => {
+
             setLoading(true);
             setError(null); // Reset error state
             try {
@@ -49,8 +50,8 @@ const ChatList: React.FC<ChatProps> = ({ selectedUserId, loggedInUserId }) => {
                     setMessages([]); 
                     setError(fetchedMessages.message);
                 } else {
+                    scrollToBottom();
                     setMessages(fetchedMessages);  
-                     scrollToBottom();
 
                 }                
 
@@ -63,23 +64,26 @@ const ChatList: React.FC<ChatProps> = ({ selectedUserId, loggedInUserId }) => {
             }
         };
 
-        fetchMessages();
-    }, [selectedUserId, loggedInUserId]);
-
+        if (selectedUserId) {
+            const interval = setInterval(() => {
+                fetchMessages();
+            }, 5000); 
     
+            return () => clearInterval(interval); // Cleanup interval on unmount
+        }    }, [selectedUserId, loggedInUserId]);
+
     return (
-        <div className="chat-container bg-white p-4 rounded-lg shadow-md flex flex-col h-full">
+        <div >
             {selectedUserId ? (
                 <>
-                    {loading && <p className="text-center text-gray-500">Loading messages...</p>}
                     {messages.length > 0 ? (
                         messages.map((message) => (
                             <div
                                 key={message.message_id}
                                 className={`p-2 my-1 rounded ${
                                     message.sender_id === loggedInUserId
-                                        ? "text-right bg-blue-100"
-                                        : "text-left bg-gray-100"
+                                    ? "text-right bg-blue-100 flex-wrap max-w-xs ml-auto"
+                                    : "text-left bg-gray-100 flex-wrap max-w-xs mr-auto"
                                 }`}
                             >
                                 <p>{message.content}</p>

@@ -2,6 +2,8 @@ import React, { useState , useRef ,useEffect } from "react";
 import UsersList from "../components/UsersList";
 import RoomsList from "../components/RoomsList";
 import ChatList from "../components/ChatList";
+import useBeamsClient from "../redux/useBeamsClient";
+import { Client as PusherPushNotifications } from "@pusher/push-notifications-web";
 
 import { useNavigate  } from "react-router-dom"; 
 
@@ -23,6 +25,8 @@ const Dashboard: React.FC = () => {
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const messageInputRef = useRef<HTMLInputElement>(null);
 
+    const beamsClient = useBeamsClient(loggedInUserId);
+
     useEffect(() => {
         const userId = sessionStorage.getItem("user_id");
         if (userId) {
@@ -32,9 +36,11 @@ const Dashboard: React.FC = () => {
             console.warn("No user_id found in sessionStorage");
         }
     }, []);
-    
+    useBeamsClient(loggedInUserId);
+
     const navigate = useNavigate(); 
 
+    
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
@@ -43,6 +49,7 @@ const Dashboard: React.FC = () => {
         try {
             localStorage.removeItem('token');
             localStorage.removeItem('username');
+            sessionStorage.removeItem("user_id")
             setSession(null);
 
             console.log(sessionStorage.getItem('token'));
@@ -50,7 +57,6 @@ const Dashboard: React.FC = () => {
 
             navigate('/connexion');
         } catch (error) {// Function to handle message submission
-            handleSendMessage();
             console.error('Logout error:', error);
         }
     };
@@ -73,6 +79,7 @@ const Dashboard: React.FC = () => {
         try {
             const token = localStorage.getItem("token");
             if (!token) throw new Error("No authentication token found");
+            
             const response = await fetch(`/api/message`, {
                 method: "POST",
                 headers: {
@@ -90,17 +97,65 @@ const Dashboard: React.FC = () => {
         }
 
         const newMsg = await response.json();
+        console.log("new msg : " + newMsg );
         setMessages((prevMessages) => [...prevMessages, newMsg]);
         setNewMessage("");
         messageInputRef.current?.focus();
         scrollToBottom();
-        setError(null); // Clear any existing error
+        setError(null); 
+       
+        // Envoi de la notification Push au destinataire
+        if (selectedUserId) {
+            sendPushNotification(selectedUserId, loggedInUserId, newMessage);
+        }            
+        
+
     } catch (error: any) {
         console.error("Error sending message:", error);
         setError(error.message || "Error sending message");
     }
 };
+const sendPushNotification = async (
+    receiver_id: number,
+    sender_id: number,
+    content: string
+  ) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("No authentication token found");
 
+
+      const payload = {
+        receiver_id,
+        sender_id,
+        content,
+    };
+    console.log("Push notification payload:", payload);
+
+      const response = await fetch(`/api/beams`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+
+      });
+  
+      if (!response.ok) {
+        const errorDetails = await response.text(); // Get error details from server
+        console.error("Error details:", errorDetails);
+        throw new Error("Failed to send push notification");
+    }
+  
+      const result = await response.json();
+      console.log("Push notification sent!", result);
+    } catch (error) {
+      console.error("Error sending push notification:", error);
+    }
+  };
+  
+  
     return (
         <div className="h-screen flex flex-col bg-gray-100">
             {/* Header */}
