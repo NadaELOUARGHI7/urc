@@ -35,11 +35,14 @@ const Dashboard: React.FC = () => {
         } else {
             console.warn("No user_id found in sessionStorage");
         }
+        
     }, []);
-    useBeamsClient(loggedInUserId);
 
     const navigate = useNavigate(); 
-
+    useEffect(() => { 
+        if (selectedUserId) {
+        useBeamsClient(selectedUserId);
+    } }, []);
     
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -106,7 +109,7 @@ const Dashboard: React.FC = () => {
        
         // Envoi de la notification Push au destinataire
         if (selectedUserId) {
-            sendPushNotification(selectedUserId, loggedInUserId, newMessage);
+            sendPushNotification(selectedUserId, loggedInUserId,newMsg);
         }            
         
 
@@ -116,37 +119,35 @@ const Dashboard: React.FC = () => {
     }
 };
 const sendPushNotification = async (
-    receiver_id: number,
-    sender_id: number,
+    receiverId: number,
+    senderId: number,
     content: string
   ) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("No authentication token found");
-
-
-      const payload = {
-        receiver_id,
-        sender_id,
-        content,
-    };
-    console.log("Push notification payload:", payload);
-
+  
       const response = await fetch(`/api/beams`, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload),
-
+        body: JSON.stringify({
+          receiver_id: receiverId,
+          sender_id: senderId,
+          content: content,
+        }),
       });
   
       if (!response.ok) {
-        const errorDetails = await response.text(); // Get error details from server
-        console.error("Error details:", errorDetails);
-        throw new Error("Failed to send push notification");
-    }
+        // Attempt to parse error details if available
+        const errorDetails = await response.text();
+        console.error("Push notification failed:", errorDetails);
+        throw new Error(
+          `Failed to send notification: ${response.status} ${response.statusText}`
+        );
+      }
   
       const result = await response.json();
       console.log("Push notification sent!", result);

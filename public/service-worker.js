@@ -1,4 +1,9 @@
 // service-worker.js
+if( 'function' === typeof importScripts) {
+  // eslint-disable no-undef 
+  importScripts("https://js.pusher.com/beams/service-worker.js");
+}
+
 self.addEventListener("push", function (event) {
   const data = event.data.json();
 
@@ -13,6 +18,7 @@ self.addEventListener("notificationclick", function (event) {
   event.notification.close();
   event.waitUntil(clients.openWindow(event.notification.data.url));
 });
+
 
 
 self.addEventListener("notificationclick", function (event) {
