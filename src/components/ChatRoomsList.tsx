@@ -9,11 +9,11 @@ interface Message {
 }
 
 interface ChatProps {
-    selectedUserId: number | null;
+    selectedRoomId: number | null;
     loggedInUserId: number;
 }
 
-const ChatList: React.FC<ChatProps> = ({ selectedUserId, loggedInUserId }) => {
+const ChatRoomsList: React.FC<ChatProps> = ({ selectedRoomId, loggedInUserId }) => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [newMessage, setNewMessage] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
@@ -25,8 +25,8 @@ const ChatList: React.FC<ChatProps> = ({ selectedUserId, loggedInUserId }) => {
     };
 
     useEffect(() => {
-        console.log("chatlist.tsx selectedUserId", selectedUserId);
-        if (!selectedUserId) return;
+        console.log("chatroomlist.tsx selectedroomId", selectedRoomId);
+        if (!selectedRoomId) return;
 
         const fetchMessages = async () => {
 
@@ -36,13 +36,14 @@ const ChatList: React.FC<ChatProps> = ({ selectedUserId, loggedInUserId }) => {
                 const token = localStorage.getItem("token");
                 if (!token) throw new Error("No authentication token found");
 
-                const response = await fetch(`/api/chat?selectedUserId=${selectedUserId}`, {
+                const response = await fetch(`/api/chatroom?selectedRoomId=${selectedRoomId}`, {
                     method: "GET",
                     headers: {
                         "Authorization": `Bearer ${token}`,
                         "Content-Type": "application/json",
                     },
                 });
+
 
                 if (!response.ok) {
                     const errorResponse = await response.json();
@@ -56,6 +57,7 @@ const ChatList: React.FC<ChatProps> = ({ selectedUserId, loggedInUserId }) => {
                 } else {
                     scrollToBottom();
                     setMessages(fetchedMessages);  
+                    console.log("hhh" , fetchedMessages);
 
                 }                
 
@@ -68,18 +70,19 @@ const ChatList: React.FC<ChatProps> = ({ selectedUserId, loggedInUserId }) => {
             }
         };
         fetchMessages();
-     /*   if (selectedUserId) {
+
+       /* if (selectedRoomId) {
             const interval = setInterval(() => {
                 fetchMessages();
             }, 5000); 
     
             return () => clearInterval(interval); // Cleanup interval on unmount
-        }  */ 
-        }, [selectedUserId, loggedInUserId]);
+        } */  
+       }, [selectedRoomId, loggedInUserId]);
 
     return (
         <div >
-            {selectedUserId ? (
+            {selectedRoomId ? (
                 <>
                     {messages.length > 0 ? (
                         messages.map((message) => (
@@ -115,4 +118,4 @@ const ChatList: React.FC<ChatProps> = ({ selectedUserId, loggedInUserId }) => {
     );
 };
 
-export default ChatList;
+export default ChatRoomsList;

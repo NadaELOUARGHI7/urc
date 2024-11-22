@@ -9,7 +9,7 @@ self.addEventListener("push", function (event) {
 
   self.registration.showNotification(data.notification.title, {
       body: data.notification.body,
-      icon: "/path-to-icon.png", // Optional notification icon
+      icon: "/logo192.png", // Optional notification icon
       data: { url: data.notification.deep_link }, // Add the deep link to the notification
   });
 });

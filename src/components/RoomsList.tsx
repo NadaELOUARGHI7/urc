@@ -1,22 +1,26 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; 
 
 interface Room {
     room_id: number;
     name: string;
     created_on: string;
 }
-
-const RoomsList: React.FC = () => {
+interface RoomsListProps {
+    selectedRoomId: number | null;
+    setSelectedRoomId: (roomId: number) => void;
+}
+const RoomsList: React.FC<RoomsListProps> = ({ selectedRoomId, setSelectedRoomId }) => {
     const [rooms, setRooms] = useState<Room[]>([]);
     const [error, setError] = useState<string | null>(null);
-    const [loading, setLoading] = useState<boolean>(true); // Add loading state
+    const navigate = useNavigate(); 
 
     useEffect(() => {
         const fetchRooms = async () => {
             try {
                 const token = localStorage.getItem("token");
 
-                console.log("Token being sent:", token);  // Log token to verify it's present
+                console.log("rooms list Token being sent:", token);  
 
                 if (!token) throw new Error("No authentication token found");
 
@@ -48,6 +52,14 @@ const RoomsList: React.FC = () => {
         fetchRooms();
     }, []);
 
+    // Handle click on a user to select and fetch messages
+    const handleRoomClick = (roomId: number) => {
+        setSelectedRoomId(roomId);
+        console.log("roomId"+roomId);
+        console.log("selectedRoomId"+selectedRoomId);
+        //navigate(`/chat/${userId}`);
+    };
+
     return (
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto mt-10">
           <h2 className="text-xl font-semibold text-center text-blue-700 mb-4">Sallons</h2>
@@ -62,7 +74,7 @@ const RoomsList: React.FC = () => {
                     </thead>
                     <tbody>
                         {rooms.map((room) => (
-                          <tr key={room.room_id} className="hover:bg-blue-50">
+                          <tr key={room.room_id} className="hover:bg-blue-50" onClick={() => handleRoomClick(room.room_id)} >
                                   <td className="py-2 px-4 border-b">{room.name}</td>
                               <td className="py-2 px-4 border-b">{room.created_on}</td>
                           </tr>

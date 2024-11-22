@@ -7,7 +7,11 @@ const redis = Redis.fromEnv();
 export const config = {
     runtime: 'edge',
 };
-
+export async function getUserNameById(userId) {
+    const user= await sql`select username from users where user_id = ${userId} `;
+       return user.rows[0]?.username || "Someone";
+  }
+  
 export default async function handler(request) {
     try {
 

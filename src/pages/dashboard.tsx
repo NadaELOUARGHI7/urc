@@ -2,6 +2,8 @@ import React, { useState , useRef ,useEffect } from "react";
 import UsersList from "../components/UsersList";
 import RoomsList from "../components/RoomsList";
 import ChatList from "../components/ChatList";
+import ChatRoomsList from "../components/ChatRoomsList";
+
 import useBeamsClient from "../redux/useBeamsClient";
 import { Client as PusherPushNotifications } from "@pusher/push-notifications-web";
 
@@ -18,6 +20,8 @@ interface Message {
 const Dashboard: React.FC = () => {
     const [session, setSession] = useState<{ token?: string; username?: string ;id? : number } | null>(null);
     const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+    const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
+
     const [loggedInUserId, setLoggedInUserId] = useState<number>(0); // Replace with actual logged-in user ID
     const [newMessage, setNewMessage] = useState<string>("");
     const [messages, setMessages] = useState<Message[]>([]);
@@ -40,7 +44,7 @@ const Dashboard: React.FC = () => {
 
     const navigate = useNavigate(); 
     useEffect(() => { 
-        if (selectedUserId) {
+        if (selectedUserId ) {
         useBeamsClient(selectedUserId);
     } }, []);
     
@@ -175,7 +179,9 @@ const sendPushNotification = async (
                         selectedUserId={selectedUserId} 
                         setSelectedUserId={setSelectedUserId} 
                     />                    
-                    <RoomsList />
+                <RoomsList selectedRoomId={selectedRoomId} 
+                        setSelectedRoomId={setSelectedRoomId} 
+                    />                    
                 </aside>
 
                 {/* Chat Section */}
@@ -183,10 +189,13 @@ const sendPushNotification = async (
                     <div className="w-full max-w-2xl flex-1 overflow-y-auto bg-white p-4 rounded-lg shadow-md">
                         {/* Placeholder for Chat messages */}
                         <p className="text-center text-gray-400">Chat messages will appear here.</p>
-                        < ChatList
-                            selectedUserId={selectedUserId}
-                            loggedInUserId={loggedInUserId}
-                        />
+            {selectedRoomId ? (
+                <ChatRoomsList selectedRoomId={selectedRoomId} loggedInUserId={loggedInUserId} />
+            ) : selectedUserId ? (
+                <ChatList selectedUserId={selectedUserId} loggedInUserId={loggedInUserId} />
+            ) : (
+                <div>Please select a room or user to view the chat.</div>
+            )}
                         </div>
 
                     {/* Message Input */}
