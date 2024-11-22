@@ -61,10 +61,7 @@ export default async function handler(req) {
 
         if (result.rows.length === 0) {
             console.log("No messages found in the room");
-            return new Response(JSON.stringify({ error: "No messages found in this room." }), {
-                status: 404,
-                headers: { 'Content-Type': 'application/json' },
-            });
+            
         }
 
         return new Response(JSON.stringify(result.rows), {

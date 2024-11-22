@@ -34,13 +34,26 @@ const Dashboard: React.FC = () => {
     useEffect(() => {
         const userId = sessionStorage.getItem("user_id");
         if (userId) {
-            setLoggedInUserId(Number(userId)); // Convert the string to a number
+            setLoggedInUserId(Number(userId)); 
             console.log("Logged in user ID set to:", Number(userId));
         } else {
             console.warn("No user_id found in sessionStorage");
         }
         
     }, []);
+
+    useEffect(() => {
+        if (selectedRoomId) {
+            setSelectedUserId(null); // Reset user selection when a room is selected
+        }
+    }, [selectedRoomId]);
+    
+    useEffect(() => {
+        if (selectedUserId) {
+            setSelectedRoomId(null); // Reset room selection when a user is selected
+        }
+    }, [selectedUserId]);
+    
 
     const navigate = useNavigate(); 
     useEffect(() => { 
@@ -189,13 +202,16 @@ const sendPushNotification = async (
                     <div className="w-full max-w-2xl flex-1 overflow-y-auto bg-white p-4 rounded-lg shadow-md">
                         {/* Placeholder for Chat messages */}
                         <p className="text-center text-gray-400">Chat messages will appear here.</p>
-            {selectedRoomId ? (
-                <ChatRoomsList selectedRoomId={selectedRoomId} loggedInUserId={loggedInUserId} />
-            ) : selectedUserId ? (
-                <ChatList selectedUserId={selectedUserId} loggedInUserId={loggedInUserId} />
-            ) : (
-                <div>Please select a room or user to view the chat.</div>
-            )}
+                       < ChatList
+                            selectedUserId={selectedUserId}
+                            loggedInUserId={loggedInUserId}
+                        />
+                        < ChatRoomsList
+                            selectedRoomId={selectedRoomId}
+                            loggedInUserId={loggedInUserId}
+                        />  
+
+                
                         </div>
 
                     {/* Message Input */}

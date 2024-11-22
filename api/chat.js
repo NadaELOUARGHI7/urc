@@ -58,11 +58,8 @@ export default async function handler(req) {
 
         // Check if there are messages
         if (result.rows.length === 0) {
-            console.log("No messages found between user and selectedUserId");
-            return new Response(JSON.stringify({ error: "No messages found between these users." }), {
-                status: 404,
-                headers: { 'Content-Type': 'application/json' },
-            });
+            console.log("No messages found in the room");
+            
         }
 
         // Return the fetched messages

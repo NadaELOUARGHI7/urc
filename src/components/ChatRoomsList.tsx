@@ -24,6 +24,7 @@ const ChatRoomsList: React.FC<ChatProps> = ({ selectedRoomId, loggedInUserId }) 
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
 
+    
     useEffect(() => {
         console.log("chatroomlist.tsx selectedroomId", selectedRoomId);
         if (!selectedRoomId) return;
