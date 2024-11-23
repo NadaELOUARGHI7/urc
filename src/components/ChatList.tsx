@@ -26,6 +26,7 @@ const ChatList: React.FC<ChatProps> = ({ selectedUserId, loggedInUserId }) => {
     };
 
     useEffect(() => {
+        scrollToBottom();
         console.log("chatlist.tsx selectedUserId", selectedUserId);
         if (!selectedUserId) return;
 
@@ -59,7 +60,7 @@ const ChatList: React.FC<ChatProps> = ({ selectedUserId, loggedInUserId }) => {
                 } else {
                     setMessages(fetchedMessages.messages || []);
                     setuserNameReciever (fetchedMessages.userNameReciever) ;
-                    scrollToBottom();
+                    
 
                 }                
 
