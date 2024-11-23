@@ -72,7 +72,7 @@ const ChatList: React.FC<ChatProps> = ({ selectedUserId, loggedInUserId }) => {
         };
         fetchMessagesAndUserName();
 
-       /* if (selectedUserId) {
+      /* if (selectedUserId) {
             const interval = setInterval(() => {
                 fetchMessagesAndUserName();
             }, 5000); 
@@ -87,8 +87,8 @@ const ChatList: React.FC<ChatProps> = ({ selectedUserId, loggedInUserId }) => {
                 <>
                   {/* Display the name of the person being texted */}
                   <h2 className="text-xl font-bold text-center mb-4">
-                        {userNameReciever }
-                    </h2>
+                        {userNameReciever  || "Loading ..."}
+                        </h2>  
 
                     {messages.length > 0 ? (
                         messages.map((message) => (

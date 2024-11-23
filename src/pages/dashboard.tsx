@@ -3,10 +3,6 @@ import UsersList from "../components/UsersList";
 import RoomsList from "../components/RoomsList";
 import ChatList from "../components/ChatList";
 import ChatRoomsList from "../components/ChatRoomsList";
-
-import useBeamsClient from "../redux/useBeamsClient";
-import { Client as PusherPushNotifications } from "@pusher/push-notifications-web";
-
 import { useNavigate  } from "react-router-dom"; 
 
 interface Message {
@@ -29,7 +25,6 @@ const Dashboard: React.FC = () => {
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const messageInputRef = useRef<HTMLInputElement>(null);
 
-    const beamsClient = useBeamsClient(loggedInUserId);
 
     useEffect(() => {
         const userId = sessionStorage.getItem("user_id");
@@ -56,10 +51,6 @@ const Dashboard: React.FC = () => {
     
 
     const navigate = useNavigate(); 
-    useEffect(() => { 
-        if (selectedUserId ) {
-        useBeamsClient(selectedUserId);
-    } }, []);
     
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -82,12 +73,10 @@ const Dashboard: React.FC = () => {
     };
 
     const handleSendMessage = async () => {
-        console.log ("user_id: from local storage  "+localStorage.getItem('user_id'));
-        console.log ("logged in user "+loggedInUserId);
-
-        console.log("Payload:", {
+            console.log("Payload:", {
             sender_id: loggedInUserId,
-            receiver_id: selectedUserId,
+            receiver_id: selectedUserId || null,
+            room_id: selectedRoomId || null,
             content: newMessage,
         });
 
@@ -95,6 +84,14 @@ const Dashboard: React.FC = () => {
             setError("Message cannot be empty.");
             return;
         }
+        
+         // Determine the API payload
+         const payload = {
+            sender_id: loggedInUserId,
+            content: newMessage,
+            ...(selectedUserId ? { receiver_id: selectedUserId } : {}),
+            ...(selectedRoomId ? { room_id: selectedRoomId } : {}),
+        };
         
         try {
             const token = localStorage.getItem("token");
@@ -106,11 +103,7 @@ const Dashboard: React.FC = () => {
                     "Authorization": `Bearer ${token}`,
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                     sender_id: loggedInUserId,
-                     receiver_id: selectedUserId,
-                     content: newMessage,
-                    }),
+                body: JSON.stringify(payload),
                 });
                 if (!response.ok) {
             throw new Error(`Failed to send message: ${response.statusText}`);
@@ -122,57 +115,14 @@ const Dashboard: React.FC = () => {
         setNewMessage("");
         messageInputRef.current?.focus();
         scrollToBottom();
-        setError(null); 
-       
-        // Envoi de la notification Push au destinataire
-        if (selectedUserId) {
-            sendPushNotification(selectedUserId, loggedInUserId,newMsg);
-        }            
+        setError(null);          
         
-
     } catch (error: any) {
         console.error("Error sending message:", error);
         setError(error.message || "Error sending message");
     }
 };
-const sendPushNotification = async (
-    receiverId: number,
-    senderId: number,
-    content: string
-  ) => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("No authentication token found");
-  
-      const response = await fetch(`/api/beams`, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          receiver_id: receiverId,
-          sender_id: senderId,
-          content: content,
-        }),
-      });
-  
-      if (!response.ok) {
-        // Attempt to parse error details if available
-        const errorDetails = await response.text();
-        console.error("Push notification failed:", errorDetails);
-        throw new Error(
-          `Failed to send notification: ${response.status} ${response.statusText}`
-        );
-      }
-  
-      const result = await response.json();
-      console.log("Push notification sent!", result);
-    } catch (error) {
-      console.error("Error sending push notification:", error);
-    }
-  };
-  
+     
   
     return (
         <div className="h-screen flex flex-col bg-gray-100">

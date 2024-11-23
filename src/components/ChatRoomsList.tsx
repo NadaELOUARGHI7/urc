@@ -60,9 +60,9 @@ const ChatRoomsList: React.FC<ChatProps> = ({ selectedRoomId, loggedInUserId }) 
 
                 } else {
                     scrollToBottom();
-                    setMessages(fetchedMessages);  
-                    setGroupName(fetchedMessages[0]?.name || "Unnamed Room"); 
-                    console.log("group name" , fetchedMessages[0]?.name );
+                    setMessages(fetchedMessages.messages || []);
+                    setGroupName(fetchedMessages.roomName) ;
+                    scrollToBottom();
 
                 }                
 
@@ -76,13 +76,13 @@ const ChatRoomsList: React.FC<ChatProps> = ({ selectedRoomId, loggedInUserId }) 
         };
         fetchMessagesAndGroupName();
 
-        if (selectedRoomId) {
+      /*  if (selectedRoomId) {
             const interval = setInterval(() => {
                 fetchMessagesAndGroupName();
             }, 5000); 
     
             return () => clearInterval(interval); // Cleanup interval on unmount
-        } 
+        } */
        }, [selectedRoomId, loggedInUserId]);
 
     return (
@@ -92,7 +92,7 @@ const ChatRoomsList: React.FC<ChatProps> = ({ selectedRoomId, loggedInUserId }) 
                 <>
                   {/* Display the group chat name */}
                        <h2 className="text-xl font-bold text-center mb-4">
-                        {groupName || "Loading group name..."}
+                        {groupName || "Loading ..."}
                         </h2>                    
                         
                         {messages.length > 0 ? (

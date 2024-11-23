@@ -2,7 +2,6 @@
 const express = require("express");
 const router = express.Router();
 const PushNotifications = require("@pusher/push-notifications-server");
-//import { getUserNameById } from './users.js'; 
 
 const beamsClient = new PushNotifications({
   instanceId: "299133a2-058c-43bd-8fea-d418d69fa943", // Replace with env variable in production
@@ -10,7 +9,7 @@ const beamsClient = new PushNotifications({
 });
 
 router.post("/api/beams", async (req, res) => {
-  const { receiver_id, sender_id, content } = req.body;
+  const { receiver_id, sender_id, content ,sender_name} = req.body;
   try {
     if (!receiver_id || !sender_id || !content) {
       return res.status(400).json({ error: "Missing required fields." });
@@ -24,14 +23,11 @@ router.post("/api/beams", async (req, res) => {
       web: {
         notification: {
           title: "New Message",
-          body: `${sender_id}: ${content.content}`,
+          body: `${sender_name}: ${content}`,
           deep_link: deepLink,
         },
       },
     });
-    console.log("content", content.content);
-   //console.log("username", getUserNameById(sender_id));
-
 
     console.log("Push notification sent!");
     res.status(200).json({ success: true, message: "Notification sent!" });

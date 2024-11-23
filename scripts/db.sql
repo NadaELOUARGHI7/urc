@@ -47,3 +47,5 @@ INSERT INTO messages (sender_id, receiver_id, content) VALUES (1, 6 , 'Hello, TE
 INSERT INTO room_messages (room_id, sender_id, content, timestamp) VALUES (1, 1, 'Hello everyone!', NOW());
 INSERT INTO room_messages (room_id, sender_id, content, timestamp) VALUES (1, 5, 'Hello!', NOW());
 INSERT INTO room_messages (room_id, sender_id, content, timestamp) VALUES (1, 5, 'How are you all its me nada ', NOW());
+INSERT INTO room_messages (room_id, sender_id, content, timestamp) VALUES (2, 5, 'this is random grp ', NOW());
+

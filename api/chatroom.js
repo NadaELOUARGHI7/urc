@@ -51,7 +51,7 @@ export default async function handler(req) {
 
         // Fetch messages for the room
         const result = await client.query(
-        `SELECT rm.*, u.username, r.name
+        `SELECT rm.*, u.username
             FROM room_messages rm
             JOIN users u ON rm.sender_id = u.user_id
             JOIN rooms r ON rm.room_id = r.room_id
@@ -60,13 +60,22 @@ export default async function handler(req) {
             [selectedRoomId]
         );
 
+        // Fetch the name of the user being texted
+        const roomResult = await client.query(
+            `SELECT name FROM rooms WHERE room_id = $1`,
+            [selectedRoomId]
+        );
+
+
         if (result.rows.length === 0) {
             console.log("No messages found in the room");
             
         }
 
+        const roomName = roomResult.rows.length > 0 ? roomResult.rows[0].name : "Unknown Room";
+
         //console.log( "this is thr response " + JSON.stringify(result.rows));
-        return new Response(JSON.stringify(result.rows), {
+        return new Response(JSON.stringify({ messages: result.rows, roomName }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' },
         });
