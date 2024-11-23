@@ -6,6 +6,7 @@ interface Message {
     receiver_id: number;
     content: string;
     timestamp: string;
+    username: string;
 }
 
 interface ChatProps {
@@ -15,10 +16,10 @@ interface ChatProps {
 
 const ChatRoomsList: React.FC<ChatProps> = ({ selectedRoomId, loggedInUserId }) => {
     const [messages, setMessages] = useState<Message[]>([]);
-    const [newMessage, setNewMessage] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const [groupName, setGroupName] = useState<string | null>(null);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -29,7 +30,7 @@ const ChatRoomsList: React.FC<ChatProps> = ({ selectedRoomId, loggedInUserId }) 
         console.log("chatroomlist.tsx selectedroomId", selectedRoomId);
         if (!selectedRoomId) return;
 
-        const fetchMessages = async () => {
+        const fetchMessagesAndGroupName = async () => {
 
             setLoading(true);
             setError(null); // Reset error state
@@ -55,10 +56,13 @@ const ChatRoomsList: React.FC<ChatProps> = ({ selectedRoomId, loggedInUserId }) 
                 if (fetchedMessages.message) {
                     setMessages([]); 
                     setError(fetchedMessages.message);
+                    setGroupName(null);
+
                 } else {
                     scrollToBottom();
                     setMessages(fetchedMessages);  
-                    console.log("hhh" , fetchedMessages);
+                    setGroupName(fetchedMessages[0]?.name || "Unnamed Room"); 
+                    console.log("group name" , fetchedMessages[0]?.name );
 
                 }                
 
@@ -70,22 +74,28 @@ const ChatRoomsList: React.FC<ChatProps> = ({ selectedRoomId, loggedInUserId }) 
                 setLoading(false);
             }
         };
-        fetchMessages();
+        fetchMessagesAndGroupName();
 
-       /* if (selectedRoomId) {
+        if (selectedRoomId) {
             const interval = setInterval(() => {
-                fetchMessages();
+                fetchMessagesAndGroupName();
             }, 5000); 
     
             return () => clearInterval(interval); // Cleanup interval on unmount
-        } */  
+        } 
        }, [selectedRoomId, loggedInUserId]);
 
     return (
         <div >
             {selectedRoomId ? (
+                
                 <>
-                    {messages.length > 0 ? (
+                  {/* Display the group chat name */}
+                       <h2 className="text-xl font-bold text-center mb-4">
+                        {groupName || "Loading group name..."}
+                        </h2>                    
+                        
+                        {messages.length > 0 ? (
                         messages.map((message) => (
                             <div
                                 key={message.message_id}
@@ -96,9 +106,17 @@ const ChatRoomsList: React.FC<ChatProps> = ({ selectedRoomId, loggedInUserId }) 
                                 }`}
                             >
                                 <p>{message.content}</p>
-                                <small className="text-gray-500 text-xs">
-                                    {new Date(message.timestamp).toLocaleString()}
-                                </small>
+
+                                {/* Affichage du nom de l'expéditeur (sauf si c'est l'utilisateur connecté) */}
+                                <div className="ml-2 text-gray-500 text-xs text-right">
+                                    {message.sender_id !== loggedInUserId && (
+                                    <span className="block font-bold text-gray-700">
+                                       {message.username || "Unknown Sender"}
+                                    </span>
+                                     )}
+                                     <span>{new Date(message.timestamp).toLocaleString()}</span>
+                                </div>
+                                
                             </div>
                         ))
                     ) : (

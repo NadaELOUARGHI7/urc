@@ -51,11 +51,12 @@ export default async function handler(req) {
 
         // Fetch messages for the room
         const result = await client.query(
-            `SELECT rm.*, u.username 
-             FROM room_messages rm
-             JOIN users u ON rm.sender_id = u.user_id
-             WHERE rm.room_id = $1
-             ORDER BY rm.timestamp ASC`,
+        `SELECT rm.*, u.username, r.name
+            FROM room_messages rm
+            JOIN users u ON rm.sender_id = u.user_id
+            JOIN rooms r ON rm.room_id = r.room_id
+            WHERE rm.room_id = $1
+            ORDER BY rm.timestamp ASC`,
             [selectedRoomId]
         );
 
@@ -64,6 +65,7 @@ export default async function handler(req) {
             
         }
 
+        //console.log( "this is thr response " + JSON.stringify(result.rows));
         return new Response(JSON.stringify(result.rows), {
             status: 200,
             headers: { 'Content-Type': 'application/json' },

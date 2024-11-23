@@ -201,7 +201,6 @@ const sendPushNotification = async (
                 <main className="flex-1 flex flex-col items-center p-4 bg-gray-50">
                     <div className="w-full max-w-2xl flex-1 overflow-y-auto bg-white p-4 rounded-lg shadow-md">
                         {/* Placeholder for Chat messages */}
-                        <p className="text-center text-gray-400">Chat messages will appear here.</p>
                        < ChatList
                             selectedUserId={selectedUserId}
                             loggedInUserId={loggedInUserId}

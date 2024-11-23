@@ -56,14 +56,22 @@ export default async function handler(req) {
             [user.id, selectedUserId]
         );
 
+        // Fetch the name of the user being texted
+        const userResult = await client.query(
+            `SELECT username FROM users WHERE user_id = $1`,
+            [selectedUserId]
+        );
+
         // Check if there are messages
         if (result.rows.length === 0) {
             console.log("No messages found in the room");
             
         }
 
-        // Return the fetched messages
-        return new Response(JSON.stringify(result.rows), {
+        const userNameReciever = userResult.rows.length > 0 ? userResult.rows[0].username : "Unknown User";
+
+        // Return the fetched messages and the user's name
+        return new Response(JSON.stringify({ messages: result.rows, userNameReciever }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' },
         });

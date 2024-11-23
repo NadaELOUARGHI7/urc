@@ -6,6 +6,7 @@ interface Message {
     receiver_id: number;
     content: string;
     timestamp: string;
+    username: string;
 }
 
 interface ChatProps {
@@ -15,7 +16,7 @@ interface ChatProps {
 
 const ChatList: React.FC<ChatProps> = ({ selectedUserId, loggedInUserId }) => {
     const [messages, setMessages] = useState<Message[]>([]);
-    const [newMessage, setNewMessage] = useState<string>("");
+    const [userNameReciever, setuserNameReciever] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -28,10 +29,10 @@ const ChatList: React.FC<ChatProps> = ({ selectedUserId, loggedInUserId }) => {
         console.log("chatlist.tsx selectedUserId", selectedUserId);
         if (!selectedUserId) return;
 
-        const fetchMessages = async () => {
+        const fetchMessagesAndUserName = async () => {
 
             setLoading(true);
-            setError(null); // Reset error state
+            setError(null); 
             try {
                 const token = localStorage.getItem("token");
                 if (!token) throw new Error("No authentication token found");
@@ -53,9 +54,11 @@ const ChatList: React.FC<ChatProps> = ({ selectedUserId, loggedInUserId }) => {
                 if (fetchedMessages.message) {
                     setMessages([]); 
                     setError(fetchedMessages.message);
+                    setuserNameReciever(null)
                 } else {
+                    setMessages(fetchedMessages.messages || []);
+                    setuserNameReciever (fetchedMessages.userNameReciever) ;
                     scrollToBottom();
-                    setMessages(fetchedMessages);  
 
                 }                
 
@@ -67,20 +70,26 @@ const ChatList: React.FC<ChatProps> = ({ selectedUserId, loggedInUserId }) => {
                 setLoading(false);
             }
         };
-        fetchMessages();
-     /*   if (selectedUserId) {
+        fetchMessagesAndUserName();
+
+       /* if (selectedUserId) {
             const interval = setInterval(() => {
-                fetchMessages();
+                fetchMessagesAndUserName();
             }, 5000); 
     
-            return () => clearInterval(interval); // Cleanup interval on unmount
-        }  */ 
+            return () => clearInterval(interval); 
+        }  */
         }, [selectedUserId, loggedInUserId]);
 
     return (
         <div >
             {selectedUserId ? (
                 <>
+                  {/* Display the name of the person being texted */}
+                  <h2 className="text-xl font-bold text-center mb-4">
+                        {userNameReciever }
+                    </h2>
+
                     {messages.length > 0 ? (
                         messages.map((message) => (
                             <div
