@@ -16,8 +16,12 @@ router.post("/api/beams", async (req, res) => {
     }
 
     const interest = `user-${receiver_id}`;
-    
-    const deepLink = `http://localhost:3001/chat/${sender_id}`; 
+    // Determine the environment and set the appropriate domain
+    const domain = process.env.NODE_ENV === "production" 
+      ? "https://urc-cwhjsam9t-nada-el-ouarghis-projects.vercel.app/"  // Your production domain
+      : "http://localhost:3001";            // Localhost for development
+
+      const deepLink = `${domain}/chat/${sender_id}`; 
 
     await beamsClient.publishToInterests([interest], {
       web: {

@@ -29,8 +29,11 @@ async function sendPushNotification(receiverId, senderId, content, userToken, ro
         try {
             console.log(`Sending push notification: receiver ${receiverId}, sender ${senderId}, room ${roomId}`);
             const senderName = await getSenderNameById(senderId);
-
-            const response = await fetch(`http://localhost:3001/api/beams`, {
+            const domain = process.env.NODE_ENV === "production" 
+            ? "https://urc-cwhjsam9t-nada-el-ouarghis-projects.vercel.app/"  // Your production domain
+            : "http://localhost:3001";            
+      
+            const response = await fetch(`${domain}/api/beams`, {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${userToken}`,
