@@ -76,13 +76,13 @@ const ChatRoomsList: React.FC<ChatProps> = ({ selectedRoomId, loggedInUserId }) 
         };
         fetchMessagesAndGroupName();
 
-      /*  if (selectedRoomId) {
+        if (selectedRoomId) {
             const interval = setInterval(() => {
                 fetchMessagesAndGroupName();
             }, 5000); 
     
             return () => clearInterval(interval); // Cleanup interval on unmount
-        } */
+        } 
        }, [selectedRoomId, loggedInUserId]);
 
     return (

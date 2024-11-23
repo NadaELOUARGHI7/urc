@@ -28,6 +28,7 @@ const Dashboard: React.FC = () => {
 
     useEffect(() => {
         const userId = sessionStorage.getItem("user_id");
+
         if (userId) {
             setLoggedInUserId(Number(userId)); 
             console.log("Logged in user ID set to:", Number(userId));

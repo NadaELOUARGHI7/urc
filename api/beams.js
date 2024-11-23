@@ -4,8 +4,8 @@ const router = express.Router();
 const PushNotifications = require("@pusher/push-notifications-server");
 
 const beamsClient = new PushNotifications({
-  instanceId: "299133a2-058c-43bd-8fea-d418d69fa943", // Replace with env variable in production
-  secretKey: "4C8ED6519D08EF8AC726DB4530668024263F7A742AF276EE98476C92E2277B7E", // Replace with env variable in production
+  instanceId:"299133a2-058c-43bd-8fea-d418d69fa943", //process.env.PUSHER_INSTANCE_ID,
+  secretKey: "4C8ED6519D08EF8AC726DB4530668024263F7A742AF276EE98476C92E2277B7E",
 });
 
 router.post("/api/beams", async (req, res) => {
@@ -32,7 +32,13 @@ router.post("/api/beams", async (req, res) => {
         },
       },
     });
-
+    console.log("Sending push notification with data:", {
+      receiver_id: receiver_id,
+      sender_id: sender_id,
+      content: content,
+      sender_name: sender_name
+    });
+    console.log("tttttttttttt",process.env.PUSHER_INSTANCE_ID);
     console.log("Push notification sent!");
     res.status(200).json({ success: true, message: "Notification sent!" });
   } catch (error) {

@@ -31,6 +31,7 @@ const ChatList: React.FC<ChatProps> = ({ selectedUserId, loggedInUserId }) => {
 
         const fetchMessagesAndUserName = async () => {
 
+            
             setLoading(true);
             setError(null); 
             try {
@@ -72,13 +73,13 @@ const ChatList: React.FC<ChatProps> = ({ selectedUserId, loggedInUserId }) => {
         };
         fetchMessagesAndUserName();
 
-      /* if (selectedUserId) {
+       if (selectedUserId) {
             const interval = setInterval(() => {
                 fetchMessagesAndUserName();
             }, 5000); 
     
             return () => clearInterval(interval); 
-        }  */
+        }  
         }, [selectedUserId, loggedInUserId]);
 
     return (
