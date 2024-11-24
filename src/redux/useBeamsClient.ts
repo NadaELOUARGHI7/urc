@@ -6,7 +6,9 @@ const useBeamsClient = (userId: number | null) => {
     useEffect(() => {
         if (!userId) return;
 
+        
         const beamsClient = new PusherPushNotifications({
+            
             instanceId: "299133a2-058c-43bd-8fea-d418d69fa943", 
         });
 

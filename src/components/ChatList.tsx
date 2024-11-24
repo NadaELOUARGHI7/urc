@@ -74,13 +74,13 @@ const ChatList: React.FC<ChatProps> = ({ selectedUserId, loggedInUserId }) => {
         };
         fetchMessagesAndUserName();
 
-       if (selectedUserId) {
+      /* if (selectedUserId) {
             const interval = setInterval(() => {
                 fetchMessagesAndUserName();
             }, 5000); 
     
             return () => clearInterval(interval); 
-        }  
+        }  */
         }, [selectedUserId, loggedInUserId]);
 
     return (
