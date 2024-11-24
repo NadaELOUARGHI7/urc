@@ -84,11 +84,7 @@ const ChatRoomsList: React.FC<ChatProps> = ({ selectedRoomId, loggedInUserId }) 
         } 
        }, [selectedRoomId, loggedInUserId]);
 
-       useEffect(() => {
-        if (messages.length > 0) {
-            scrollToBottom(); 
-        }
-    }, [messages]);
+       
 
     return (
         <div >
