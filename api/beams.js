@@ -18,7 +18,7 @@ router.post("/api/beams", async (req, res) => {
     const interest = `user-${receiver_id}`;
     const domain = process.env.NODE_ENV === "production" 
     ? `https://${process.env.VERCEL_URL}`
-    : "http://localhost:3001";           
+    : `http://${process.env.VERCEL_URL}`;           
 
       const deepLink = `${domain}/chat/${sender_id}`; 
 

@@ -24,11 +24,9 @@ const ChatList: React.FC<ChatProps> = ({ selectedUserId, loggedInUserId }) => {
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
-
     useEffect(() => {
-        scrollToBottom();
-        console.log("chatlist.tsx selectedUserId", selectedUserId);
         if (!selectedUserId) return;
+
 
         const fetchMessagesAndUserName = async () => {
 
@@ -73,15 +71,23 @@ const ChatList: React.FC<ChatProps> = ({ selectedUserId, loggedInUserId }) => {
             }
         };
         fetchMessagesAndUserName();
+        scrollToBottom(); 
 
-      /* if (selectedUserId) {
+        if (selectedUserId) {
             const interval = setInterval(() => {
                 fetchMessagesAndUserName();
             }, 5000); 
     
             return () => clearInterval(interval); 
-        }  */
+        }  
         }, [selectedUserId, loggedInUserId]);
+        
+        useEffect(() => {
+            if (messages.length > 0) {
+                scrollToBottom(); 
+            }
+        }, [messages]);
+
 
     return (
         <div >

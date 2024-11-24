@@ -21,15 +21,13 @@ const ChatRoomsList: React.FC<ChatProps> = ({ selectedRoomId, loggedInUserId }) 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const [groupName, setGroupName] = useState<string | null>(null);
 
+    
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
-
     
     useEffect(() => {
-        scrollToBottom();
 
-        console.log("chatroomlist.tsx selectedroomId", selectedRoomId);
         if (!selectedRoomId) return;
 
         const fetchMessagesAndGroupName = async () => {
@@ -75,15 +73,22 @@ const ChatRoomsList: React.FC<ChatProps> = ({ selectedRoomId, loggedInUserId }) 
             }
         };
         fetchMessagesAndGroupName();
+        scrollToBottom(); 
 
-       /* if (selectedRoomId) {
+        if (selectedRoomId) {
             const interval = setInterval(() => {
                 fetchMessagesAndGroupName();
             }, 5000); 
     
             return () => clearInterval(interval); 
-        } */
+        } 
        }, [selectedRoomId, loggedInUserId]);
+
+       useEffect(() => {
+        if (messages.length > 0) {
+            scrollToBottom(); 
+        }
+    }, [messages]);
 
     return (
         <div >
