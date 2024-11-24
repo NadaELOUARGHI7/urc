@@ -45,7 +45,6 @@ async function sendPushNotification(receiverId, senderId, content, userToken, ro
                     sender_name: senderName,
                 }),
             });
-            console.log("************process.env.VERCEL_URL :   ",process.env.VERCEL_URL);
             if (!response.ok) {
                 const errorDetails = await response.text();
                 console.error(`Push notification failed for receiver ${receiverId}:`, errorDetails);
