@@ -2,3 +2,6 @@
 
 >>>  npm install 
 >>>  vercel dev
+
+connect with user : test
+             password : testubo
