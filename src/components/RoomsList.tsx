@@ -60,29 +60,36 @@ const RoomsList: React.FC<RoomsListProps> = ({ selectedRoomId, setSelectedRoomId
     };
 
     return (
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto mt-10">
+        <div className="bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto mt-10">
           <h2 className="text-xl font-semibold text-center text-blue-700 mb-4">Sallons</h2>
           {error && <p style={{ color: "red" }}>{error}</p>}
-            {rooms.length === 0 ? (
-                <p>No rooms found.</p>
-            ) : (
-                <table>
-                    <thead>
-                        <tr>
-                      </tr>
-                    </thead>
-                    <tbody>
-                        {rooms.map((room) => (
-                          <tr key={room.room_id} className="hover:bg-blue-50" onClick={() => handleRoomClick(room.room_id)} >
-                                  <td className="py-2 px-4 border-b">{room.name}</td>
-                              <td className="py-2 px-4 border-b">{room.created_on}</td>
-                          </tr>
-                        ))}
-                    </tbody>
-                </table>
-            )}
+          {rooms.length === 0 ? (
+            <p>No rooms found.</p>
+          ) : (
+            <div className="space-y-4">
+              {rooms.map((room) => (
+                <div
+                  key={room.room_id}
+                  role="button"
+                  tabIndex={0}
+                  className={`p-4 border rounded-lg shadow hover:bg-blue-100 cursor-pointer ${
+                    room.room_id === selectedRoomId ? "bg-blue-100" : "bg-white"
+                  }`}
+                  onClick={() => handleRoomClick(room.room_id)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      handleRoomClick(room.room_id);
+                    }
+                  }}
+                >
+                  <h3 className="text-lg font-semibold text-gray-700">{room.name}</h3>
+                  <p className="text-sm text-gray-500">Created on: {room.created_on}</p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-    );
+      );
 };
 
 export default RoomsList;

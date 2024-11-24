@@ -50,20 +50,26 @@ export function Login() {
    
 
     return (
-        <div className="h-screen flex flex-col bg-gray-100">
+        <div className="h-screen flex flex-col bg-gradient-to-b from-gray-100 to-gray-300">
     {/* Top Menu */}
     <Navbar />
 
     {/* Login Form */}
-    <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto mt-8 px-4 py-6 bg-white rounded-lg shadow-lg">
+    <form onSubmit={handleSubmit} 
+        className="w-full max-w-md mx-auto mt-10 px-6 py-8 bg-white rounded-lg shadow-lg"  >
+         <h2 className="text-2xl font-bold text-center text-blue-700 mb-6">
+                    Connexion
+                </h2>
         <div className="mb-6">
-            <label htmlFor="login" className="block text-gray-700 font-semibold mb-2">
+            <label htmlFor="login" 
+             className="block text-gray-700 font-semibold mb-2"
+                        >
                 Login
             </label>
             <input
                 name="login"
                 placeholder="Login"
-                className="w-full bg-gray-200 border-2 border-gray-300 rounded-lg py-2 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full bg-gray-100 border-2 border-gray-300 rounded-lg py-2 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 id="login"
                 type="text"
                 required
@@ -71,28 +77,32 @@ export function Login() {
         </div>
 
         <div className="mb-6">
-            <label htmlFor="password" className="block text-gray-700 font-semibold mb-2">
+            <label htmlFor="password" 
+            className="block text-gray-700 font-semibold mb-2"
+                >
                 Password
             </label>
             <input
                 name="password"
                 placeholder="Password"
-                className="w-full bg-gray-200 border-2 border-gray-300 rounded-lg py-2 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full bg-gray-100 border-2 border-gray-300 rounded-lg py-2 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 id="password"
                 type="password"
                 required
             />
         </div>
 
-        <div className="mb-6">
-            <button
-                type="submit"
-                className="w-full bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-white font-bold py-2 px-4 rounded-lg"
-                disabled={loading}
-            >
-                {loading ? "Loading..." : "Connexion"}
-            </button>
-        </div>
+        <button
+                    type="submit"
+                    className={`w-full py-3 rounded-lg text-white font-bold ${
+                        loading
+                            ? "bg-gray-400 cursor-not-allowed"
+                            : "bg-blue-600 hover:bg-blue-500"
+                    } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    disabled={loading}
+                >
+                    {loading ? "Loading..." : "Connexion"}
+                </button>
     </form>
 
     {/* Session Info */}

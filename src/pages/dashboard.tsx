@@ -40,13 +40,13 @@ const Dashboard: React.FC = () => {
 
     useEffect(() => {
         if (selectedRoomId) {
-            setSelectedUserId(null); // Reset user selection when a room is selected
+            setSelectedUserId(null); 
         }
     }, [selectedRoomId]);
     
     useEffect(() => {
         if (selectedUserId) {
-            setSelectedRoomId(null); // Reset room selection when a user is selected
+            setSelectedRoomId(null);
         }
     }, [selectedUserId]);
     
@@ -86,7 +86,6 @@ const Dashboard: React.FC = () => {
             return;
         }
         
-         // Determine the API payload
          const payload = {
             sender_id: loggedInUserId,
             content: newMessage,
@@ -128,9 +127,9 @@ const Dashboard: React.FC = () => {
     return (
         <div className="h-screen flex flex-col bg-gray-100">
             {/* Header */}
-            <header className="bg-blue-700 text-white p-4 flex justify-between items-center">
-                <h1 className="text-xl font-semibold">UBO Relay Chat</h1>
-                <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded" onClick={handleLogout}>
+            <header className="bg-gradient-to-r from-blue-600 to-blue-400 text-white p-6 flex justify-between items-center shadow-md">
+            <h1 className="text-2xl font-bold">UBO Relay Chat</h1>
+            <button className="bg-blue-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg shadow"  onClick={handleLogout}>
                     DÉCONNEXION
                 </button>
             </header>
@@ -138,7 +137,7 @@ const Dashboard: React.FC = () => {
             {/* Main Content */}
             <div className="flex flex-1 overflow-hidden">
                 {/* Sidebar with Users and Rooms */}
-                <aside className="bg-white w-full md:w-1/4 p-4 shadow-lg overflow-auto">
+                <aside className="w-1/3 bg-gray-200 p-6 shadow-lg space-y-6 overflow-y-auto">
                 <UsersList 
                         selectedUserId={selectedUserId} 
                         setSelectedUserId={setSelectedUserId} 
@@ -149,9 +148,9 @@ const Dashboard: React.FC = () => {
                 </aside>
 
                 {/* Chat Section */}
-                <main className="flex-1 flex flex-col items-center p-4 bg-gray-50">
-                    <div className="w-full max-w-2xl flex-1 overflow-y-auto bg-white p-4 rounded-lg shadow-md">
-                        {/* Placeholder for Chat messages */}
+                <main className="w-2/3 flex flex-col items-center bg-white p-4 shadow-md">
+                    <div className="w-full flex-1 overflow-y-auto p-4 bg-gray-50 rounded-lg">
+                     {/* Placeholder for Chat messages */}
                        < ChatList
                             selectedUserId={selectedUserId}
                             loggedInUserId={loggedInUserId}
@@ -165,16 +164,16 @@ const Dashboard: React.FC = () => {
                         </div>
 
                     {/* Message Input */}
-                    <div className="w-full max-w-2xl mt-4 flex items-center">
+                    <div className="w-full max-w-2xl mt-4 flex items-center bg-white shadow-md rounded-lg">
                         <input
                             type="text"
                             placeholder="Message"
-                            className="flex-1 p-2 border rounded-l-lg focus:outline-none"
+                            className="flex-1 p-4 border-none focus:outline-none rounded-l-lg"
                             value={newMessage}
-                            onChange={(e) => setNewMessage(e.target.value)} // Update message as user types
+                            onChange={(e) => setNewMessage(e.target.value)} 
                         />
                         <button
-                            className="bg-blue-500 text-white px-4 py-2 rounded-r-lg hover:bg-blue-600"
+                            className="bg-blue-600 text-white px-6 py-2 rounded-r-lg shadow hover:bg-blue-800"
                             onClick={handleSendMessage}
                         >
                             ENVOYER

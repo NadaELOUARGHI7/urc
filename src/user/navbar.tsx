@@ -17,17 +17,17 @@ const handleLoginClick = () => {
 };
 
 return(
-<header className="bg-blue-700 text-white p-4 flex justify-between items-center">
-    <h1 className="text-xl font-semibold">UBO Relay Chat</h1>
-    <div className="flex space-x-4">
+    <header className="bg-gradient-to-r from-blue-600 to-blue-400 text-white p-6 flex justify-between items-center shadow-md">
+            <h1 className="text-2xl font-bold">UBO Relay Chat</h1>
+            <div className="flex space-x-4">
         <button
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded focus:outline-none"
+            className="bg-blue-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg shadow" 
             onClick={handleLoginClick}
         >
             Connecter
         </button>
         <button
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded focus:outline-none"
+            className="bg-blue-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg shadow" 
             onClick={handleInscrireClick}
         >
             Inscrire

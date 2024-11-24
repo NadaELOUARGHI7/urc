@@ -30,8 +30,9 @@ async function sendPushNotification(receiverId, senderId, content, userToken, ro
             const senderName = await getSenderNameById(senderId);
             const domain = process.env.NODE_ENV === "production" 
             ? `https://${process.env.VERCEL_URL}`
-            : "http://localhost:3001";            
-      
+            : "http://localhost:3001";   
+         
+      console.log("domain",process.env.VERCEL_URL);
             const response = await fetch(`${domain}/api/beams`, {
                 method: "POST",
                 headers: {

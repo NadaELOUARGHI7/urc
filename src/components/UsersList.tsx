@@ -63,33 +63,38 @@ const UsersList: React.FC<UsersListProps> = ({ selectedUserId, setSelectedUserId
         console.log("selectedUserId"+selectedUserId);
     };
 
-
     return (
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto mt-10">
-          <h2 className="text-xl font-semibold text-center text-blue-700 mb-4">Utilisateurs</h2>
-          {error && <p style={{ color: "red" }}>{error}</p>}
+        <div className="bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto mt-10">
+            <h2 className="text-xl font-semibold text-center text-blue-700 mb-4">Utilisateurs</h2>
+            {error && <p style={{ color: "red" }}>{error}</p>}
             {users.length === 0 ? (
                 <p>No users found.</p>
             ) : (
-                <table>
-                    <thead>
-                        <tr>
-                      </tr>
-                    </thead>
-                    <tbody>
-                        {users.map((user) => (
-                          <tr key={user.user_id} className="hover:bg-blue-50"  onClick={() => handleUserClick(user.user_id)} >
-
-
-                                  <td className="py-2 px-4 border-b">{user.username}</td>
-                              <td className="py-2 px-4 border-b">{user.last_login}</td>
-                          </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <div className="space-y-4">
+                    {users.map((user) => (
+                        <div
+                            key={user.user_id}
+                            role="button"
+                            tabIndex={0}
+                            className={`p-4 border rounded-lg shadow hover:bg-blue-100 cursor-pointer ${
+                                user.user_id === selectedUserId ? "bg-blue-100" : "bg-white"
+                            }`}
+                            onClick={() => handleUserClick(user.user_id)}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter" || e.key === " ") {
+                                    handleUserClick(user.user_id);
+                                }
+                            }}
+                        >
+                            <h3 className="text-lg font-semibold text-gray-700">{user.username}</h3>
+                            <p className="text-sm text-gray-500">Last login: {user.last_login}</p>
+                        </div>
+                    ))}
+                </div>
             )}
         </div>
-    );
+      );
+      
 };
 
 export default UsersList;

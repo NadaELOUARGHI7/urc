@@ -99,14 +99,14 @@ const ChatRoomsList: React.FC<ChatProps> = ({ selectedRoomId, loggedInUserId }) 
                         messages.map((message) => (
                             <div
                                 key={message.message_id}
-                                className={`p-2 my-1 rounded ${
+                                className={`p-4 my-2 rounded-lg shadow-md ${
                                     message.sender_id === loggedInUserId
                                     ? "text-right bg-blue-100 flex-wrap max-w-xs ml-auto"
                                     : "text-left bg-gray-100 flex-wrap max-w-xs mr-auto"
                                 }`}
                             >
-                                <p>{message.content}</p>
-
+                                <p className="break-words">{message.content}</p>
+                                
                                 {/* Affichage du nom de l'expéditeur (sauf si c'est l'utilisateur connecté) */}
                                 <div className="ml-2 text-gray-500 text-xs text-right">
                                     {message.sender_id !== loggedInUserId && (
