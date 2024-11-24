@@ -52,12 +52,11 @@ const RoomsList: React.FC<RoomsListProps> = ({ selectedRoomId, setSelectedRoomId
         fetchRooms();
     }, []);
 
-    // Handle click on a user to select and fetch messages
+
     const handleRoomClick = (roomId: number) => {
         setSelectedRoomId(roomId);
         console.log("roomId"+roomId);
         console.log("selectedRoomId"+selectedRoomId);
-        //navigate(`/chat/${userId}`);
     };
 
     return (

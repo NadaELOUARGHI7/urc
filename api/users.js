@@ -7,6 +7,7 @@ const redis = Redis.fromEnv();
 export const config = {
     runtime: 'edge',
 };
+
   
 export default async function handler(request) {
     try {
@@ -15,14 +16,14 @@ export default async function handler(request) {
 
         if (!token) {
             console.warn("Authentication token missing");
-            return unauthorizedResponse(); // Return unauthorized if token is missing
+            return unauthorizedResponse(); 
         }
 
 
         const tok = await redis.get(token);
         if (!tok) {
             console.warn("Token is not valid or expired.");
-            return unauthorizedResponse(); // Return unauthorized if token is not valid
+            return unauthorizedResponse(); 
         }
 
 
@@ -38,12 +39,10 @@ export default async function handler(request) {
         const currentUser=user.username;
 
 
-        // Query the database for users
         const { rowCount, rows } = await sql`select user_id, username, TO_CHAR(last_login, 'DD/MM/YYYY HH24:MI') as last_login from users WHERE username != ${currentUser}  order by last_login desc`;
         console.log("Got " + rowCount + " users");
 
         if (rowCount === 0) {
-            // Vercel bug doesn't allow 204 response status
             return new Response("[]", {
                 status: 200,
                 headers: { 'content-type': 'application/json' },

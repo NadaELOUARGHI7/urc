@@ -5,7 +5,6 @@ export const config = {
     runtime: "edge", 
 };
 
-// Helper function to fetch sender's name
 async function getSenderNameById(senderId) {
     let client;
     try {
@@ -30,7 +29,7 @@ async function sendPushNotification(receiverId, senderId, content, userToken, ro
             console.log(`Sending push notification: receiver ${receiverId}, sender ${senderId}, room ${roomId}`);
             const senderName = await getSenderNameById(senderId);
             const domain = process.env.NODE_ENV === "production" 
-            ? "https://urc-cwhjsam9t-nada-el-ouarghis-projects.vercel.app/"  // Your production domain
+            ? `https://${process.env.VERCEL_URL}`
             : "http://localhost:3001";            
       
             const response = await fetch(`${domain}/api/beams`, {
@@ -46,7 +45,7 @@ async function sendPushNotification(receiverId, senderId, content, userToken, ro
                     sender_name: senderName,
                 }),
             });
-    
+            console.log("************process.env.VERCEL_URL :   ",process.env.VERCEL_URL);
             if (!response.ok) {
                 const errorDetails = await response.text();
                 console.error(`Push notification failed for receiver ${receiverId}:`, errorDetails);
@@ -102,7 +101,6 @@ export default async (request, response) => {
                 groupMemberIds.map((memberId) =>
                     sendPushNotification(memberId, sender_id, content, userToken, room_id)
                 )
-                , console.log("gsgsgsg",content)
             );
 
             return new Response(JSON.stringify(newMessage), {

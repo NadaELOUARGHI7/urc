@@ -9,7 +9,7 @@ export default async function handler(req) {
     try {
         console.log("Handling request for /api/chat");
 
-        // Validate the authenticated user
+
         const user = await getConnecterUser(req);
         if (!user) {
             console.log("Not connected");
@@ -19,12 +19,12 @@ export default async function handler(req) {
             });
         }
 
-        // Extract the query parameters from the URL
+
         const url = new URL(req.url);
         const selectedUserId = url.searchParams.get("selectedUserId")  ;
         console.log("Fetching messages for selectedUserId:", selectedUserId);
 
-        // Connect to the database
+
         const client = await db.connect();
         if (!client) {
             console.error("Failed to connect to the database");
@@ -35,7 +35,7 @@ export default async function handler(req) {
         }
 
 
-        // User-to-user chat
+
         if (selectedUserId) {
             console.log("Fetching user-to-user chat for selectedUserId:", selectedUserId);
 
@@ -47,8 +47,8 @@ export default async function handler(req) {
                 });
             }
 
-        // Fetch messages between the authenticated user and the target user
-        const result = await client.query(
+
+            const result = await client.query(
             `SELECT * FROM messages 
              WHERE (sender_id = $1 AND receiver_id = $2) 
                 OR (sender_id = $2 AND receiver_id = $1) 
@@ -56,13 +56,13 @@ export default async function handler(req) {
             [user.id, selectedUserId]
         );
 
-        // Fetch the name of the user being texted
+
         const userResult = await client.query(
             `SELECT username FROM users WHERE user_id = $1`,
             [selectedUserId]
         );
 
-        // Check if there are messages
+
         if (result.rows.length === 0) {
             console.log("No messages found in the room");
             
@@ -70,7 +70,7 @@ export default async function handler(req) {
 
         const userNameReciever = userResult.rows.length > 0 ? userResult.rows[0].username : "Unknown User";
 
-        // Return the fetched messages and the user's name
+
         return new Response(JSON.stringify({ messages: result.rows, userNameReciever }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' },

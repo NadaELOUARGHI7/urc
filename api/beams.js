@@ -16,10 +16,9 @@ router.post("/api/beams", async (req, res) => {
     }
 
     const interest = `user-${receiver_id}`;
-    // Determine the environment and set the appropriate domain
     const domain = process.env.NODE_ENV === "production" 
-      ? "https://urc-cwhjsam9t-nada-el-ouarghis-projects.vercel.app/"  // Your production domain
-      : "http://localhost:3001";            // Localhost for development
+    ? `https://${process.env.VERCEL_URL}`
+    : "http://localhost:3001";           
 
       const deepLink = `${domain}/chat/${sender_id}`; 
 
@@ -38,7 +37,7 @@ router.post("/api/beams", async (req, res) => {
       content: content,
       sender_name: sender_name
     });
-    console.log("tttttttttttt",process.env.PUSHER_INSTANCE_ID);
+
     console.log("Push notification sent!");
     res.status(200).json({ success: true, message: "Notification sent!" });
   } catch (error) {

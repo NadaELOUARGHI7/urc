@@ -14,7 +14,6 @@ export default async function handler(req, res) {
             if (token) {
                 await redis.del(token);
 
-                // Send success response
                 return res.status(200).json({ message: 'Logged out successfully' });
             } else {
                 return res.status(400).json({ error: 'Token missing' });

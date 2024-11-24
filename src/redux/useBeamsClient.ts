@@ -1,4 +1,3 @@
-//useBeamsClients
 import { useEffect } from "react";
 import { Client as PusherPushNotifications } from "@pusher/push-notifications-web";
 

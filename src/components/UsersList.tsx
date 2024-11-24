@@ -56,12 +56,11 @@ const UsersList: React.FC<UsersListProps> = ({ selectedUserId, setSelectedUserId
         fetchUsers();
     }, []);
 
-    // Handle click on a user to select and fetch messages
+
     const handleUserClick = (userId: number) => {
         setSelectedUserId(userId);
         console.log("userId"+userId);
         console.log("selectedUserId"+selectedUserId);
-        //navigate(`/chat/${userId}`);
     };
 
 

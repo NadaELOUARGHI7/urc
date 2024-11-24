@@ -81,7 +81,7 @@ const ChatRoomsList: React.FC<ChatProps> = ({ selectedRoomId, loggedInUserId }) 
                 fetchMessagesAndGroupName();
             }, 5000); 
     
-            return () => clearInterval(interval); // Cleanup interval on unmount
+            return () => clearInterval(interval); 
         } */
        }, [selectedRoomId, loggedInUserId]);
 

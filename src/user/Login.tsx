@@ -35,8 +35,8 @@ export function Login() {
                 console.log("from login comp " + userIdFromStorage);
 
                 
-                setUserId(userIdFromStorage); // Update state to trigger useBeamsClient
-                localStorage.setItem("token", result.token); // Make sure the key matches what you're using in Dashboard
+                setUserId(userIdFromStorage); 
+                localStorage.setItem("token", result.token);
                 navigate('/dashboard');
             },
             (loginError: CustomError) => {

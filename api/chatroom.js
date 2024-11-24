@@ -9,7 +9,7 @@ export default async function handler(req) {
     try {
         console.log("Handling request for /api/chatroom");
 
-        // Validate the authenticated user
+
         const user = await getConnecterUser(req);
         if (!user) {
             console.log("Not connected");
@@ -19,13 +19,13 @@ export default async function handler(req) {
             });
         }
 
-        // Extract the query parameters from the URL
+
         const url = new URL(req.url);
         const selectedRoomId = url.searchParams.get("selectedRoomId");
         console.log("Fetching messages for selectedRoomId:", selectedRoomId);
 
 
-        // Connect to the database
+
         const client = await db.connect();
         if (!client) {
             console.error("Failed to connect to the database");
@@ -36,7 +36,7 @@ export default async function handler(req) {
         }
 
 
-        // User-to-room chat
+
         if (selectedRoomId) {
             console.log("Fetching user-to-room chat for selectedRoomId:", selectedRoomId);
 
@@ -74,7 +74,6 @@ export default async function handler(req) {
 
         const roomName = roomResult.rows.length > 0 ? roomResult.rows[0].name : "Unknown Room";
 
-        //console.log( "this is thr response " + JSON.stringify(result.rows));
         return new Response(JSON.stringify({ messages: result.rows, roomName }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' },
